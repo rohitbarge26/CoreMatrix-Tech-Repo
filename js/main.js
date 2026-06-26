@@ -95,16 +95,20 @@ document.querySelectorAll('.svc-card').forEach(card=>{
 
 /* ---------- mailto fallback copy ---------- */
 document.querySelectorAll('a[href^="mailto:"]').forEach(link => {
-  link.addEventListener('click', () => {
-    const email = link.getAttribute('href').replace('mailto:', '');
-    navigator.clipboard.writeText(email).then(() => {
-      const originalText = link.innerHTML;
-      link.innerHTML = '✓ Copied to Clipboard!';
-      link.style.borderColor = 'var(--cyan)';
-      setTimeout(() => {
-        link.innerHTML = originalText;
-        link.style.borderColor = '';
-      }, 2000);
-    }).catch(() => {});
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const href = link.getAttribute('href');
+    const email = href.replace('mailto:', '');
+    navigator.clipboard.writeText(email).catch(() => {});
+    
+    const originalText = link.innerHTML;
+    link.innerHTML = '✓ Copied to Clipboard!';
+    link.style.borderColor = 'var(--cyan)';
+    setTimeout(() => {
+      link.innerHTML = originalText;
+      link.style.borderColor = '';
+    }, 2000);
+    
+    window.location.href = href;
   });
 });
